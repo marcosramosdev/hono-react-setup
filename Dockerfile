@@ -26,5 +26,6 @@ COPY --from=build /app/web/dist ./web/dist
 COPY package.json bun.lock ./
 RUN bun install --production
 
-EXPOSE 3000
+ENV PORT=8080
+EXPOSE 8080
 CMD [ "bun", "run", "start" ]
