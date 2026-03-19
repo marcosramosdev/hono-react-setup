@@ -1,6 +1,6 @@
 import { hc, type InferResponseType } from "hono/client";
 import { useEffect, useState } from "react";
-import type { AppType } from "../../server/index";
+import type { AppType } from "../../server/app";
 
 const client = hc<AppType>("/");
 
@@ -28,13 +28,14 @@ function App() {
 
 	return (
 		<div>
-			<h2>list of books</h2>
+			<h2>List of Books</h2>
 			{books.map((book) => (
 				<p key={book.title}>
-					{book.title} - {book.numberOfPages}
+					{book.title} - {book.numberOfPages} pages
 				</p>
 			))}
 
+			<h2>Counter</h2>
 			<div>
 				<button type="button" onClick={() => setCounter((prev) => prev + 1)}>
 					add to counter

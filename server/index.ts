@@ -1,34 +1,20 @@
-import { Hono } from "hono";
-import { serveStatic } from "hono/bun";
+import { z } from "zod";
+import app from "./app";
 
-const app = new Hono();
+const ServeEnv = z.object({
+	PORT: z
+		.string()
+		.regex(/^\d+$/, "Port must be a numeric string")
+		.default("3000")
+		.transform(Number),
+});
 
-const route = app
-	.get("/api", (c) => {
-		return c.text("Hello Hono!");
-	})
-	.get("/api/books", (c) => {
-		return c.json([
-			{
-				title: "Essencialismo",
-				numberOfPages: 240,
-			},
-			{
-				title: "1984",
-				numberOfPages: 240,
-			},
-			{
-				title: "O Obstaculo é o Caminho",
-				numberOfPages: 190,
-			},
-		]);
-	});
+const ProcessEnv = ServeEnv.parse(process.env);
 
-app.use("/*", serveStatic({ root: "./web/dist" }));
-
-export type AppType = typeof route;
-
-export default {
-	port: 3000,
+const server = Bun.serve({
+	port: ProcessEnv.PORT,
+	hostname: "0.0.0.0",
 	fetch: app.fetch,
-};
+});
+
+console.log("server running at port:", server.port);
